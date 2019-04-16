@@ -6,19 +6,22 @@ class Rectangle {
     this.h = h;
   }
   contains(point) {
-    return (point.x >= this.x - this.w &&
+    return (
+      point.x >= this.x - this.w &&
       point.x < this.x + this.w &&
       point.y >= this.y - this.h &&
-      point.y < this.y + this.h);
+      point.y < this.y + this.h
+    );
   }
 
   intersects(range) {
-    return !(range.x - range.w > this.x + this.w ||
+    return !(
+      range.x - range.w > this.x + this.w ||
       range.x + range.w < this.x - this.w ||
       range.y - range.h > this.y + this.h ||
-      range.y + range.h < this.y - this.h);
+      range.y + range.h < this.y - this.h
+    );
   }
-
 }
 
 class point {
@@ -28,26 +31,39 @@ class point {
   }
 }
 
-
 class QuadTree {
-  constructor(boundary, tier) {
-
+  constructor(parent, boundary, tier) {
     //some of this logic sucks like, it shouldnt be repeated in every child
 
     //idea: main frame body, with array of all descendants. each parent has pointer to its children
     //child just has
+    this.parent = parent;
     this.boundary = boundary;
     this.divided = false;
-    this.divisions = {};
+    this.divisions = [];
     this.tier = tier;
     this.overbox = false;
-    this.motiflist = ["/","\\", "-", "|","+.","x.",  "+", "fne","fsw","fnw","fse","tn","ts","te","tw"];
-
+    this.motiflist = [
+      '/',
+      '\\',
+      '-',
+      '|',
+      '+.',
+      'x.',
+      '+',
+      'fne',
+      'fsw',
+      'fnw',
+      'fse',
+      'tn',
+      'ts',
+      'te',
+      'tw',
+    ];
 
     //wingtile logic
     this.phase = this.tier % 2;
-    this.motifindex = this.tier;//int(random(0,14));
-    this.motif = this.motiflist[this.motifindex];
+    this.selectMotif(this.tier); //int(random(0,14));
     this.color = [color(255), color(0)];
     this.tile = new wingtile(this.motif, this.phase, this.boundary, this.color);
 
@@ -60,26 +76,32 @@ class QuadTree {
     this.edgecol = this.edgeNeut;
     this.fillcol = this.fillNeut;
     this.discovered = false;
-
   }
-  scroll(deltaY,point){
+
+  selectMotif(idx) {
+    this.motifindex = idx % this.motiflist.length;
+    this.motif = this.motiflist[this.motifindex];
+  }
+
+  scroll(deltaY, point) {
     if (!this.boundary.contains(point)) {
       return false;
     }
 
     if (!this.divided) {
-      this.motifindex = (((this.motifindex + deltaY/abs(deltaY))  % this.motiflist.length) + this.motiflist.length) % this.motiflist.length;
-      this.motif = this.motiflist[this.motifindex];
-
+      console.log(deltaY);
+      this.selectMotif(
+        (((this.motifindex + deltaY / abs(deltaY)) % this.motiflist.length) +
+          this.motiflist.length) %
+          this.motiflist.length
+      );
     } else {
-      for (let i = 0; i < 4; i++) {
-        if (this.divisions[i].scroll(deltaY,point)) {
+      for (let i = 0; i < this.divisions.length; i++) {
+        if (this.divisions[i].scroll(deltaY, point)) {
           return true;
         }
       }
     }
-
-
   }
 
   divide() {
@@ -90,15 +112,33 @@ class QuadTree {
     let h = this.boundary.h;
 
     let ne = new Rectangle(x + w / 2, y - h / 2, w / 2, h / 2);
-    this.divisions[0] = new QuadTree(ne, subtier);
+    this.divisions[0] = new QuadTree(this, ne, subtier);
     let nw = new Rectangle(x - w / 2, y - h / 2, w / 2, h / 2);
-    this.divisions[1] = new QuadTree(nw, subtier);
+    this.divisions[1] = new QuadTree(this, nw, subtier);
     let se = new Rectangle(x + w / 2, y + h / 2, w / 2, h / 2);
-    this.divisions[2] = new QuadTree(se, subtier);
+    this.divisions[2] = new QuadTree(this, se, subtier);
     let sw = new Rectangle(x - w / 2, y + h / 2, w / 2, h / 2);
-    this.divisions[3] = new QuadTree(sw, subtier);
+    this.divisions[3] = new QuadTree(this, sw, subtier);
     this.divided = true;
+  }
 
+  join(point) {
+    if (!this.boundary.contains(point)) {
+      return false;
+    }
+
+    if (!this.divided) {
+      if (this.parent) {
+        this.parent.divided = false;
+        this.parent.divisions = [];
+      }
+    } else {
+      for (let i = 0; i < this.divisions.length; i++) {
+        if (this.divisions[i].join(point)) {
+          return true;
+        }
+      }
+    }
   }
 
   highlight(point) {
@@ -109,16 +149,16 @@ class QuadTree {
     if (!this.divided) {
       this.overbox = true;
     } else {
-      for (let i = 0; i < 4; i++) {
+      for (let i = 0; i < this.divisions.length; i++) {
         if (this.divisions[i].highlight(point)) {
           return true;
         }
       }
     }
-
   }
 
-  drawtiles() { //this needs to be a breadth first search{
+  drawtiles() {
+    //this needs to be a breadth first search{
 
     let drawqueue = new Queue();
     let traverse = new Queue();
@@ -130,7 +170,7 @@ class QuadTree {
     while (!traverse.isEmpty()) {
       node = traverse.dequeue();
       if (node.divided) {
-        for (let i = 0; i < 4; i++) {
+        for (let i = 0; i < this.divisions.length; i++) {
           traverse.enqueue(node.divisions[i]);
         }
       } else {
@@ -144,12 +184,9 @@ class QuadTree {
       let tile = drawqueue.dequeue();
       tile.drawtile();
     }
-
   }
 
   show() {
-
-
     let drawqueue = new Queue();
     let traverse = new Queue();
     traverse.enqueue(this);
@@ -160,7 +197,7 @@ class QuadTree {
     while (!traverse.isEmpty()) {
       node = traverse.dequeue();
       if (node.divided) {
-        for (let i = 0; i < 4; i++) {
+        for (let i = 0; i < this.divisions.length; i++) {
           traverse.enqueue(node.divisions[i]);
         }
       } else {
@@ -168,7 +205,7 @@ class QuadTree {
       }
     }
 
-    push()
+    push();
 
     noFill();
     strokeWeight(1);
@@ -184,16 +221,14 @@ class QuadTree {
         rect(node.boundary.x, node.boundary.y, node.boundary.w, node.boundary.h);
         node.overbox = false;
       } else {
-        stroke(node.edgeNeut)
+        stroke(node.edgeNeut);
         rect(node.boundary.x, node.boundary.y, node.boundary.w, node.boundary.h);
       }
     }
-    pop()
+    pop();
   }
 
-
   split(point) {
-
     if (!this.boundary.contains(point)) {
       return false;
     }
@@ -201,12 +236,11 @@ class QuadTree {
     if (!this.divided) {
       this.divide();
     } else {
-      for (let i = 0; i < 4; i++) {
+      for (let i = 0; i < this.divisions.length; i++) {
         if (this.divisions[i].split(point)) {
           return true;
         }
       }
     }
-
   }
 }
