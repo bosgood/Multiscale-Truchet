@@ -93,16 +93,18 @@ class wingtile {
       default:
     }
 
-    fill(this.color[1]);
-    circle(x - w, y - h, bigr);
-    circle(x + w, y - h, bigr);
-    circle(x - w, y + h, bigr);
-    circle(x + w, y + h, bigr);
+    if (this.motif !== ' ') {
+      fill(this.color[1]);
+      circle(x - w, y - h, bigr);
+      circle(x + w, y - h, bigr);
+      circle(x - w, y + h, bigr);
+      circle(x + w, y + h, bigr);
 
-    fill(this.color[0]);
-    circle(x, y - h, smallr);
-    circle(x + w, y, smallr);
-    circle(x, y + h, smallr);
-    circle(x - w, y, smallr);
+      fill(this.color[0]);
+      circle(x, y - h, smallr);
+      circle(x + w, y, smallr);
+      circle(x, y + h, smallr);
+      circle(x - w, y, smallr);
+    }
   }
 }

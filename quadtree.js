@@ -59,6 +59,7 @@ class QuadTree {
       'ts',
       'te',
       'tw',
+      ' ',
     ];
 
     //wingtile logic
