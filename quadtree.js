@@ -63,7 +63,8 @@ class QuadTree {
 
     //wingtile logic
     this.phase = this.tier % 2;
-    this.selectMotif(this.tier); //int(random(0,14));
+    this.selectMotif(this.tier);
+    // this.selectMotif(int(random(0, this.motiflist.length)));
     this.color = [color(255), color(0)];
     this.tile = new wingtile(this.motif, this.phase, this.boundary, this.color);
 
@@ -89,7 +90,6 @@ class QuadTree {
     }
 
     if (!this.divided) {
-      console.log(deltaY);
       this.selectMotif(
         (((this.motifindex + deltaY / abs(deltaY)) % this.motiflist.length) +
           this.motiflist.length) %

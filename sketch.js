@@ -2,7 +2,8 @@ let trees;
 let bounds;
 let mousepos;
 var highlightcheckbox;
-const cellCount = 3;
+const cellCount = 2;
+const margin = 75;
 
 function setup() {
   //clunky
@@ -19,7 +20,7 @@ function setup() {
   trees = [];
   for (let i = 0; i < cellCount; i++) {
     let spacer = i == 0 ? 0 : canvasW * Math.pow(2, i);
-    let bounds = new Rectangle(140, 140 + spacer, canvasW, canvasH);
+    let bounds = new Rectangle(140, 140 + spacer + margin * i, canvasW, canvasH);
     let tree = new QuadTree(null, bounds, 0);
     trees.push(tree);
   }
@@ -27,7 +28,7 @@ function setup() {
   mousepos = new point(mouseX, mouseY);
 
   highlightcheckbox = createCheckbox('Highlight Selection', false);
-  highlightcheckbox.position(width / 2, height);
+  highlightcheckbox.position(width / 2, height + 25);
 
   cnv.mouseWheel(changemotif);
 }
