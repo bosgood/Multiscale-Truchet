@@ -1,22 +1,28 @@
-let qtree;
+let trees;
 let bounds;
 let mousepos;
 var highlightcheckbox;
+const cellCount = 3;
 
 function setup() {
   //clunky
   canvasSize = windowHeight / 2;
-  canvasW = canvasSize / 2;
-  canvasH = canvasSize / 2;
 
   canvasSize *= 5 / 3;
+  canvasW = canvasSize / 8;
+  canvasH = canvasSize / 8;
 
-  canvasX = canvasSize / 2;
-  canvasY = canvasSize / 2;
+  canvasX = canvasSize / 8;
+  canvasY = canvasSize / 8;
 
   cnv = createCanvas(canvasSize, canvasSize);
-  let bounds = new Rectangle(canvasX, canvasY, canvasW, canvasH);
-  qtree = new QuadTree(null, bounds, 0);
+  trees = [];
+  for (let i = 0; i < cellCount; i++) {
+    let spacer = i == 0 ? 0 : canvasW * Math.pow(2, i);
+    let bounds = new Rectangle(140, 140 + spacer, canvasW, canvasH);
+    let tree = new QuadTree(null, bounds, 0);
+    trees.push(tree);
+  }
 
   mousepos = new point(mouseX, mouseY);
 
@@ -27,27 +33,37 @@ function setup() {
 }
 
 function draw() {
-  background(qtree.color[1]);
+  background(trees[0].color[1]);
   mousepos = new point(mouseX, mouseY);
-  qtree.drawtiles();
+  trees.forEach(t => {
+    t.drawtiles();
+  });
 
   if (highlightcheckbox.checked()) {
-    qtree.highlight(mousepos);
-    qtree.show();
+    trees.forEach(t => {
+      t.highlight(mousepos);
+      t.show();
+    });
   }
 }
 
 function changemotif(event) {
   mousepos = new point(mouseX, mouseY);
-  qtree.scroll(event.deltaY, mousepos);
+  trees.forEach(t => {
+    t.scroll(event.deltaY, mousepos);
+  });
 }
 
 function mouseClicked() {
   if (mouseButton == LEFT) {
-    qtree.split(mousepos);
+    trees.forEach(t => {
+      t.split(mousepos);
+    });
     redraw();
   } else if (mouseButton == RIGHT) {
-    qtree.join(mousepos);
+    trees.forEach(t => {
+      t.join(mousepos);
+    });
     redraw();
   }
 }
