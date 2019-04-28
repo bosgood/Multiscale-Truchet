@@ -67,7 +67,7 @@ class QuadTree {
     this.selectMotif(this.tier);
     // this.selectMotif(int(random(0, this.motiflist.length)));
     this.color = [color(255), color(0)];
-    this.tile = new wingtile(this.motif, this.phase, this.boundary, this.color);
+    this.tile = new Wingtile(this.motif, this.phase, this.boundary, this.color);
 
     this.edgeHover = color(0, 255, 0);
     this.fillHover = color(0, 64, 0);
@@ -85,7 +85,7 @@ class QuadTree {
     this.motif = this.motiflist[this.motifindex];
   }
 
-  scroll(deltaY, point) {
+  changeMotif(deltaY, point) {
     if (!this.boundary.contains(point)) {
       return false;
     }
@@ -98,7 +98,7 @@ class QuadTree {
       this.selectMotif(selectIdx);
     } else {
       for (let i = 0; i < this.divisions.length; i++) {
-        if (this.divisions[i].scroll(deltaY, point)) {
+        if (this.divisions[i].changeMotif(deltaY, point)) {
           return true;
         }
       }
@@ -158,74 +158,32 @@ class QuadTree {
     }
   }
 
-  drawtiles() {
-    //this needs to be a breadth first search{
-
-    let drawqueue = new Queue();
-    let traverse = new Queue();
-    traverse.enqueue(this);
-    //drawqueue.enqueue(this.tile);
-
-    let node;
-
-    while (!traverse.isEmpty()) {
-      node = traverse.dequeue();
-      if (node.divided) {
-        for (let i = 0; i < this.divisions.length; i++) {
-          traverse.enqueue(node.divisions[i]);
-        }
-      } else {
-        //this is a getaround, sloppy code
-        node.tile.motif = node.motif;
-        drawqueue.enqueue(node.tile);
-      }
-    }
-
-    while (!drawqueue.isEmpty()) {
-      let tile = drawqueue.dequeue();
-      tile.drawtile();
-    }
+  draw() {
+    this.tile.motif = this.motif;
+    this.tile.draw();
   }
 
-  show() {
-    let drawqueue = new Queue();
-    let traverse = new Queue();
-    traverse.enqueue(this);
-    //drawqueue.enqueue(this.tile);
-
-    let node;
-
-    while (!traverse.isEmpty()) {
-      node = traverse.dequeue();
-      if (node.divided) {
-        for (let i = 0; i < this.divisions.length; i++) {
-          traverse.enqueue(node.divisions[i]);
-        }
-      } else {
-        drawqueue.enqueue(node);
-      }
-    }
-
-    push();
+  drawHighlight() {
     noFill();
     strokeWeight(1);
     rectMode(RADIUS);
-
-    while (!drawqueue.isEmpty()) {
-      let node = drawqueue.dequeue();
-      if (node.overbox && !drawqueue.isEmpty()) {
-        drawqueue.enqueue(node);
-        continue;
-      } else if (node.overbox && drawqueue.isEmpty()) {
-        stroke(node.edgeHover);
-        rect(node.boundary.x, node.boundary.y, node.boundary.w, node.boundary.h);
-        node.overbox = false;
-      } else {
-        stroke(node.edgeNeut);
-        rect(node.boundary.x, node.boundary.y, node.boundary.w, node.boundary.h);
-      }
+    if (this.overbox) {
+      stroke(this.edgeHover);
+      rect(this.boundary.x, this.boundary.y, this.boundary.w, this.boundary.h);
+      this.overbox = false;
+    } else {
+      stroke(this.edgeNeut);
+      rect(this.boundary.x, this.boundary.y, this.boundary.w, this.boundary.h);
     }
-    pop();
+  }
+
+  getDrawables() {
+    if (!this.divided) {
+      return [this];
+    }
+    return this.divisions.reduce((memo, t) => {
+      return memo.concat(t.getDrawables());
+    }, []);
   }
 
   split(point) {

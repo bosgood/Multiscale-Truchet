@@ -44,7 +44,7 @@ function setup() {
   highlightcheckbox = createCheckbox('Highlight Selection', true);
   highlightcheckbox.position(width / 2, height + 25);
 
-  cnv.mouseWheel(changemotif);
+  cnv.mouseWheel(changeMotif);
 }
 
 function forEachTree(f) {
@@ -56,22 +56,26 @@ function forEachTree(f) {
 function draw() {
   background(rows[0][0].color[1]);
   mousepos = new point(mouseX, mouseY);
+
+  let drawables = [];
   forEachTree(t => {
-    t.drawtiles();
+    drawables = drawables.concat(t.getDrawables());
   });
+  drawables.sort((a, b) => a.tier - b.tier);
+  drawables.forEach(d => d.draw());
 
   if (highlightcheckbox.checked()) {
-    forEachTree(t => {
-      t.highlight(mousepos);
-      t.show();
+    drawables.forEach(d => {
+      d.highlight(mousepos);
+      d.drawHighlight();
     });
   }
 }
 
-function changemotif(event) {
+function changeMotif(event) {
   mousepos = new point(mouseX, mouseY);
   forEachTree(t => {
-    t.scroll(event.deltaY, mousepos);
+    t.changeMotif(event.deltaY, mousepos);
   });
 }
 

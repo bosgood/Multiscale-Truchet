@@ -1,4 +1,4 @@
-class wingtile {
+class Wingtile {
   constructor(motif, phase, boundary, color) {
     //motif is the pattern, phase is white on black or black on white
 
@@ -15,7 +15,7 @@ class wingtile {
     }
   }
 
-  drawtile() {
+  draw() {
     let x = this.boundary.x;
     let y = this.boundary.y;
     let w = this.boundary.w;
