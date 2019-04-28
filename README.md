@@ -1,26 +1,38 @@
 # Multiscale-Truchet
+
 Clickable, multiscale truchet tiling generator in javascript
 
 ## Background
+
 Javascript implementation of Christopher Carlson's algorithim:
 
 https://christophercarlson.com/portfolio/multi-scale-truchet-patterns/
 
+Thanks to [@DRynne](https://github.com/DRynne) for the [original implementation](https://github.com/DRynne/Multiscale-Truchet).
+
+## How to use
+
+### p5.js
+
+https://editor.p5js.org/m_eLange/sketches/pfKsGd6Mn
+
+### Locally
+
+Clone the repo, then from that directory, in your terminal start a web server:
+
+```bash
+python -m SimpleHTTPServer
+```
+
+Then visit the webpage at <http://localhost:8000/>
+
 ## Examples
 
-![colour squiggle](colour_squiggle.png)
+![design](design.png)
 
 ![highlighted](highlighted.png)
 
 ## Todo
 
-- [x] switch off and on the quadtree highlighting
-- [ ] instantiate only the quadtree first, then put in the tiles
-- [ ] quadtree pattern selector
-- [ ] list of tiles selected for randomisation
-- [x] scrollwheel changes tile
-- [ ] righclick removes up to that top level of tree
-- [ ] save button for photos
-  - [ ] vector image save
-- [ ] colour selector, saver
-- [ ] completely change the data structure
+- [ ] vector image save
+- [ ] json serialization for saving/loading patterns
