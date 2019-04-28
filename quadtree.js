@@ -93,7 +93,7 @@ class QuadTree {
     this.selectMotif(selectIdx);
   }
 
-  divide() {
+  split() {
     let subtier = this.tier + 1;
     let x = this.boundary.x;
     let y = this.boundary.y;
@@ -111,39 +111,15 @@ class QuadTree {
     this.divided = true;
   }
 
-  join(point) {
-    if (!this.boundary.contains(point)) {
-      return false;
-    }
-
-    if (!this.divided) {
-      if (this.parent) {
-        this.parent.divided = false;
-        this.parent.divisions = [];
-      }
-    } else {
-      for (let i = 0; i < this.divisions.length; i++) {
-        if (this.divisions[i].join(point)) {
-          return true;
-        }
-      }
+  join() {
+    if (this.parent) {
+      this.parent.divided = false;
+      this.parent.divisions = [];
     }
   }
 
-  highlight(point) {
-    if (!this.boundary.contains(point)) {
-      return false;
-    }
-
-    if (!this.divided) {
-      this.overbox = true;
-    } else {
-      for (let i = 0; i < this.divisions.length; i++) {
-        if (this.divisions[i].highlight(point)) {
-          return true;
-        }
-      }
-    }
+  highlight() {
+    this.overbox = true;
   }
 
   draw() {
@@ -176,21 +152,5 @@ class QuadTree {
 
   contains(point) {
     return this.boundary.contains(point);
-  }
-
-  split(point) {
-    if (!this.boundary.contains(point)) {
-      return false;
-    }
-
-    if (!this.divided) {
-      this.divide();
-    } else {
-      for (let i = 0; i < this.divisions.length; i++) {
-        if (this.divisions[i].split(point)) {
-          return true;
-        }
-      }
-    }
   }
 }

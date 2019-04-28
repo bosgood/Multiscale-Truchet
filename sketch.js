@@ -47,12 +47,6 @@ function setup() {
   cnv.mouseWheel(changeMotif);
 }
 
-function forEachTree(f) {
-  rows.forEach(row => {
-    row.forEach(f);
-  });
-}
-
 function draw() {
   background(rows[0][0].color[1]);
   mousepos = new point(mouseX, mouseY);
@@ -62,7 +56,10 @@ function draw() {
 
   if (highlightcheckbox.checked()) {
     drawables.forEach(d => {
-      d.highlight(mousepos);
+      d.drawHighlight();
+    });
+    getMatching(mousepos).forEach(d => {
+      d.highlight();
       d.drawHighlight();
     });
   }
@@ -93,11 +90,11 @@ function changeMotif(event) {
 function mouseClicked() {
   let action;
   if (mouseButton == LEFT) {
-    action = t => t.split(mousepos);
+    action = t => t.split();
   } else if (mouseButton == RIGHT) {
-    action = t => t.join(mousepos);
+    action = t => t.join();
   }
-  forEachTree(action);
+  getMatching(mousepos).forEach(action);
   redraw();
 }
 
