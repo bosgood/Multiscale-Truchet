@@ -86,23 +86,11 @@ class QuadTree {
   }
 
   changeMotif(deltaY, point) {
-    if (!this.boundary.contains(point)) {
-      return false;
-    }
-
-    if (!this.divided) {
-      let idx = isNaN(this.motifindex) ? 0 : this.motifindex;
-      const selectIdx =
-        (((idx + deltaY / abs(deltaY)) % this.motiflist.length) + this.motiflist.length) %
-        this.motiflist.length;
-      this.selectMotif(selectIdx);
-    } else {
-      for (let i = 0; i < this.divisions.length; i++) {
-        if (this.divisions[i].changeMotif(deltaY, point)) {
-          return true;
-        }
-      }
-    }
+    let idx = isNaN(this.motifindex) ? 0 : this.motifindex;
+    const selectIdx =
+      (((idx + deltaY / abs(deltaY)) % this.motiflist.length) + this.motiflist.length) %
+      this.motiflist.length;
+    this.selectMotif(selectIdx);
   }
 
   divide() {
@@ -184,6 +172,10 @@ class QuadTree {
     return this.divisions.reduce((memo, t) => {
       return memo.concat(t.getDrawables());
     }, []);
+  }
+
+  contains(point) {
+    return this.boundary.contains(point);
   }
 
   split(point) {

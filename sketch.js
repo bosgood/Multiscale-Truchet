@@ -3,7 +3,7 @@ let bounds;
 let mousepos;
 var highlightcheckbox;
 const rowCount = 8;
-const columnCount = 11;
+const columnCount = 5;
 const margin = 25;
 const padding = 60;
 
@@ -57,11 +57,7 @@ function draw() {
   background(rows[0][0].color[1]);
   mousepos = new point(mouseX, mouseY);
 
-  let drawables = [];
-  forEachTree(t => {
-    drawables = drawables.concat(t.getDrawables());
-  });
-  drawables.sort((a, b) => a.tier - b.tier);
+  const drawables = getDrawables();
   drawables.forEach(d => d.draw());
 
   if (highlightcheckbox.checked()) {
@@ -72,11 +68,26 @@ function draw() {
   }
 }
 
+function getDrawables() {
+  let drawables = [];
+  rows.forEach(row => {
+    row.forEach(col => {
+      drawables = drawables.concat(col.getDrawables());
+    });
+  });
+  drawables.sort((a, b) => a.tier - b.tier);
+  return drawables;
+}
+
+function getMatching(mousepos) {
+  return getDrawables().filter(d => {
+    return d.contains(mousepos);
+  });
+}
+
 function changeMotif(event) {
   mousepos = new point(mouseX, mouseY);
-  forEachTree(t => {
-    t.changeMotif(event.deltaY, mousepos);
-  });
+  getMatching(mousepos).forEach(t => t.changeMotif(event.deltaY, mousepos));
 }
 
 function mouseClicked() {
