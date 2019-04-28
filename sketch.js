@@ -2,17 +2,17 @@ let rows;
 let bounds;
 let mousepos;
 var highlightcheckbox;
-const rowCount = 6;
-const columnCount = 10;
+const rowCount = 8;
+const columnCount = 11;
 const margin = 25;
-const padding = 75;
+const padding = 60;
 
 function setup() {
-  const canvasWidth = windowWidth - margin;
+  const canvasWidth = windowWidth - margin * 2;
   const canvasHeight = windowHeight - margin * 2;
 
-  const drawableWidth = canvasWidth - padding * 2;
-  const drawableHeight = canvasHeight - padding * 3;
+  const drawableWidth = canvasWidth / 2.25;
+  const drawableHeight = canvasHeight / 2.25;
 
   const w = drawableWidth / columnCount;
   const h = drawableHeight / rowCount;
@@ -29,8 +29,8 @@ function setup() {
     rows.push(row);
     for (let j = 0; j < columnCount; j++) {
       const bounds = new Rectangle(
-        padding / 2 + canvasW + canvasW * j,
-        padding / 2 + canvasH + canvasH * i,
+        padding / 2 + canvasW + canvasW * 2 * j,
+        padding / 2 + canvasH + canvasH * 2 * i,
         canvasW,
         canvasH
       );
