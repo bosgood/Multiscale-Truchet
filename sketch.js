@@ -54,12 +54,7 @@ function forEachTree(f) {
 }
 
 function draw() {
-  // strokeWeight(1);
-  // stroke(color(0));
-  // rectMode(RADIUS);
-  // rect(100, 100, 100, 100);
-
-  background(trees[0][0].color[1]);
+  background(rows[0][0].color[1]);
   mousepos = new point(mouseX, mouseY);
   forEachTree(t => {
     t.drawtiles();
