@@ -16,6 +16,10 @@ class Wingtile {
   }
 
   draw() {
+    if (this.motif === ' ') {
+      return;
+    }
+
     let x = this.boundary.x;
     let y = this.boundary.y;
     let w = this.boundary.w;
@@ -86,18 +90,16 @@ class Wingtile {
       default:
     }
 
-    if (this.motif !== ' ') {
-      fill(this.color[1]);
-      circle(x - w, y - h, bigr);
-      circle(x + w, y - h, bigr);
-      circle(x - w, y + h, bigr);
-      circle(x + w, y + h, bigr);
+    fill(this.color[1]);
+    circle(x - w, y - h, bigr);
+    circle(x + w, y - h, bigr);
+    circle(x - w, y + h, bigr);
+    circle(x + w, y + h, bigr);
 
-      fill(this.color[0]);
-      circle(x, y - h, smallr);
-      circle(x + w, y, smallr);
-      circle(x, y + h, smallr);
-      circle(x - w, y, smallr);
-    }
+    fill(this.color[0]);
+    circle(x, y - h, smallr);
+    circle(x + w, y, smallr);
+    circle(x, y + h, smallr);
+    circle(x - w, y, smallr);
   }
 }
