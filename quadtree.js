@@ -91,11 +91,11 @@ class QuadTree {
     }
 
     if (!this.divided) {
-      this.selectMotif(
-        (((this.motifindex + deltaY / abs(deltaY)) % this.motiflist.length) +
-          this.motiflist.length) %
-          this.motiflist.length
-      );
+      let idx = isNaN(this.motifindex) ? 0 : this.motifindex;
+      const selectIdx =
+        (((idx + deltaY / abs(deltaY)) % this.motiflist.length) + this.motiflist.length) %
+        this.motiflist.length;
+      this.selectMotif(selectIdx);
     } else {
       for (let i = 0; i < this.divisions.length; i++) {
         if (this.divisions[i].scroll(deltaY, point)) {
