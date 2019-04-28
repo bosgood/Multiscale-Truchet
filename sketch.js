@@ -3,7 +3,7 @@ let bounds;
 let mousepos;
 var highlightcheckbox;
 const rowCount = 8;
-const columnCount = 5;
+const columnCount = 15;
 const margin = 25;
 const padding = 60;
 
