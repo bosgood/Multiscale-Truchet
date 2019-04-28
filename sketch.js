@@ -1,4 +1,4 @@
-let trees;
+let rows;
 let bounds;
 let mousepos;
 var highlightcheckbox;
@@ -23,10 +23,10 @@ function setup() {
 
   cnv = createCanvas(canvasWidth, canvasHeight);
 
-  trees = [];
+  rows = [];
   for (let i = 0; i < rowCount; i++) {
     const row = [];
-    trees.push(row);
+    rows.push(row);
     for (let j = 0; j < columnCount; j++) {
       const bounds = new Rectangle(
         padding / 2 + canvasW + canvasW * j,
@@ -47,8 +47,8 @@ function setup() {
   cnv.mouseWheel(changemotif);
 }
 
-function everyTile(f) {
-  trees.forEach(row => {
+function forEachTree(f) {
+  rows.forEach(row => {
     row.forEach(f);
   });
 }
@@ -61,12 +61,12 @@ function draw() {
 
   background(trees[0][0].color[1]);
   mousepos = new point(mouseX, mouseY);
-  everyTile(t => {
+  forEachTree(t => {
     t.drawtiles();
   });
 
   if (highlightcheckbox.checked()) {
-    everyTile(t => {
+    forEachTree(t => {
       t.highlight(mousepos);
       t.show();
     });
@@ -75,7 +75,7 @@ function draw() {
 
 function changemotif(event) {
   mousepos = new point(mouseX, mouseY);
-  everyTile(t => {
+  forEachTree(t => {
     t.scroll(event.deltaY, mousepos);
   });
 }
@@ -87,7 +87,7 @@ function mouseClicked() {
   } else if (mouseButton == RIGHT) {
     action = t => t.join(mousepos);
   }
-  everyTile(action);
+  forEachTree(action);
   redraw();
 }
 
