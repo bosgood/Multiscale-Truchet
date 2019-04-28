@@ -207,7 +207,6 @@ class QuadTree {
     }
 
     push();
-
     noFill();
     strokeWeight(1);
     rectMode(RADIUS);

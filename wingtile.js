@@ -34,12 +34,10 @@ class wingtile {
       case '\\':
         arc(x + w, y - h, arcd, arcd, PI / 2, PI);
         arc(x - w, y + h, arcd, arcd, (3 * PI) / 2, 2 * PI);
-
         break;
       case '/':
         arc(x - w, y - h, arcd, arcd, 0, PI / 2);
         arc(x + w, y + h, arcd, arcd, PI, (3 * PI) / 2);
-
         break;
       case '-':
         rect(x, y, w, smallr);
@@ -59,19 +57,15 @@ class wingtile {
         break;
       case 'fne':
         arc(x + w, y - h, arcd, arcd, PI / 2, PI);
-
         break;
       case 'fsw':
         arc(x - w, y + h, arcd, arcd, (3 * PI) / 2, 2 * PI);
-
         break;
       case 'fnw':
         arc(x - w, y - h, arcd, arcd, 0, PI / 2);
-
         break;
       case 'fse':
         arc(x + w, y + h, arcd, arcd, PI, (3 * PI) / 2);
-
         break;
       case 'tn':
         fill(this.color[0]);
@@ -80,7 +74,6 @@ class wingtile {
       case 'ts':
         fill(this.color[0]);
         rect(x, y + smallr, w, bigr);
-
         break;
       case 'te':
         fill(this.color[0]);
